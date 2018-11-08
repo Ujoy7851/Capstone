@@ -247,7 +247,7 @@ class Main {
   }
 
   async myloadModel(){
-    const myLoadedModel  = await tf.loadModel('https://localhost:9966/model.json');
+    const myLoadedModel  = await tf.loadModel('https://github.com/Ujoy7851/Capstone/tree/master/model/model.json');
     console.log('myLoadedModel.layers.length');
     console.log(myLoadedModel.layers.length);
 
