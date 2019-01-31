@@ -69,22 +69,52 @@ async function detect(){
                 console.log(res.classIndex + " " + res.confidences[res.classIndex]*100);
                 // chrome.tabs.executeScript(null,{code:"scrollBy(0,200);"});
                 //control
+                var ytb_video = document.getElementsByTagName("video")[0];
+                var nextButton = document.getElementsByClassName("ytp-next-button")[0];
+
                 if(res.confidences[res.classIndex]*100 > 60){
                     switch(res.classIndex){
                         case 0:
                             break;
                         case 1:
-                            scrollBy(0,200);
+                            //scrollBy(0,200);
+                            if(ytb_video.paused){
+                                ytb_video.play();
+                            }
+                            else{
+                                ytb_video.pause();
+                            }
                             break;
                         case 2:
-                            scrollBy(0,-200);
+                            //scrollBy(0,-200);
+                            nextButton.click();
                             break;
                         case 3:
+                            if (ytb_video.volume > 0.9){
+                                ytb_video.volume = 1;
+                            }
+                               
+                            else{ 
+                                ytb_video.volume += 0.1;
+                            }
+                               
                             break;
                         case 4:
+                            if(ytb_video.volume < 0.1){
+                                ytb_video.volume = 0.1;
+                            }
+                               
+                            else{
+                                ytb_video.volume -= 0.1;
+                            }  
                             break;
                         case 5:
+                            ytb_video.currentTime += 5;
                             break;
+                        case 6:
+                            ytb_video.currentTime -= 5;
+                            break;
+                            
                         default:
                             break;
                     }
