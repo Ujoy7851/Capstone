@@ -20,6 +20,8 @@ let mobilenet;
 //classifiers
 const TOPK = 10;
 
+let count = 0;
+
 //save& load
 let myIncomingClassifier = [];
 let myGroups = []
@@ -48,7 +50,7 @@ async function setup(){
 }
 async function detect(){
     let playAlert = setInterval(async function(){
-        if(isDetecting === true){
+        if(isDetecting === true&& count==0){
             // const pose = await 
             let pose = await model.estimateSinglePose(video,0.35,true,16);
             // console.log(pose);
@@ -118,6 +120,7 @@ async function detect(){
                         default:
                             break;
                     }
+                    if(res.classIndex != 0) count = 5;
                 }
             }
             // Dispose image when done
@@ -126,6 +129,9 @@ async function detect(){
                 logits.dispose();
             }
             // console.log(pose);
+        }
+        else if(count!=0){
+            count--;
         }
         else clearInterval(playAlert);
     },500);
