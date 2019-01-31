@@ -37,6 +37,27 @@ function gotMessage(message, sender, sendResponse){
             });   // 현재 탭에만 ON하라고 보냄
         }
     }
+    else if(message.data == "?"){
+        console.log("?");
+    }
+    else if(message.data =="ON"){
+        is = true;
+        chrome.browserAction.setIcon({path: "likeG.png"});
+        chrome.tabs.query({active:true,currentWindow: true},function(tabs){
+            var current = tabs[0].id;
+            chrome.tabs.sendMessage(current, msg);
+        });
+    }
+    else if(message.data =="OFF"){
+        is = false;
+        chrome.browserAction.setIcon({path: "likeR.png"});
+        /* 모든 탭에 OFF하라고 보냄*/
+        chrome.tabs.query({}, function(tabs) {
+            for (let i=0; i<tabs.length; i++) {
+                chrome.tabs.sendMessage(tabs[i].id, msg);
+            }
+        });
+    }
     sendResponse({data:is});
 }
 function buttonClicked(tab) {
