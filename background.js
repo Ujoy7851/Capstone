@@ -3,6 +3,9 @@ console.log('background running');
 let is = true;
 let lastTab;
 let lastWindow;
+
+let firstImage ="likeG.png";
+let secondImage ="likeR.png";
 // chrome.browserAction.onClicked.addListener(buttonClicked);
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
@@ -20,7 +23,7 @@ function gotMessage(message, sender, sendResponse){
         if(is===true){
             msg.data = "OFF";
             is = false;
-            chrome.browserAction.setIcon({path: "likeR.png"});
+            chrome.browserAction.setIcon({path: secondImage});
             /* 모든 탭에 OFF하라고 보냄*/
             chrome.tabs.query({}, function(tabs) {
                 for (let i=0; i<tabs.length; i++) {
@@ -30,7 +33,7 @@ function gotMessage(message, sender, sendResponse){
         }
         else {
             is = true;
-            chrome.browserAction.setIcon({path: "likeG.png"});
+            chrome.browserAction.setIcon({path: firstImage});
             chrome.tabs.query({active:true,currentWindow: true},function(tabs){
                 var current = tabs[0].id;
                 chrome.tabs.sendMessage(current, msg);
@@ -42,7 +45,7 @@ function gotMessage(message, sender, sendResponse){
     }
     else if(message.data =="ON"){
         is = true;
-        chrome.browserAction.setIcon({path: "likeG.png"});
+        chrome.browserAction.setIcon({path: firstImage});
         chrome.tabs.query({active:true,currentWindow: true},function(tabs){
             var current = tabs[0].id;
             chrome.tabs.sendMessage(current, msg);
@@ -50,7 +53,7 @@ function gotMessage(message, sender, sendResponse){
     }
     else if(message.data =="OFF"){
         is = false;
-        chrome.browserAction.setIcon({path: "likeR.png"});
+        chrome.browserAction.setIcon({path: secondImage});
         /* 모든 탭에 OFF하라고 보냄*/
         chrome.tabs.query({}, function(tabs) {
             for (let i=0; i<tabs.length; i++) {
@@ -69,7 +72,7 @@ function buttonClicked(tab) {
     if(is===true){
         msg.data = "OFF";
         is = false;
-        chrome.browserAction.setIcon({path: "likeR.png"});
+        chrome.browserAction.setIcon({path: secondImage});
         /* 모든 탭에 OFF하라고 보냄*/
         chrome.tabs.query({}, function(tabs) {
             for (let i=0; i<tabs.length; i++) {
@@ -79,7 +82,7 @@ function buttonClicked(tab) {
     }
     else {
         is = true;
-        chrome.browserAction.setIcon({path: "likeG.png"});
+        chrome.browserAction.setIcon({path: firstImage});
         chrome.tabs.sendMessage(tab.id, msg);   // 현재 탭에만 ON하라고 보냄
     }
 }
