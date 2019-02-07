@@ -106,13 +106,26 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"background.js":[function(require,module,exports) {
 console.log('background running');
 
-let is = true;
+let is = null;
 let lastTab;
 let lastWindow;
 
-let firstImage = "likeG.png";
-let secondImage = "likeR.png";
+let secondImage = "standing-up-man-.png";
+let firstImage = "man-celebrating1.png";
 // chrome.browserAction.onClicked.addListener(buttonClicked);
+
+function save() {
+    if (is == true) chrome.storage.sync.set({ power: true });else chrome.storage.sync.set({ power: false });
+}
+function load() {
+    chrome.storage.sync.get('power', function (data) {
+        is = data.power;
+        console.log(data.power);
+        if (is) chrome.browserAction.setIcon({ path: firstImage });else chrome.browserAction.setIcon({ path: secondImage });
+    });
+}
+load();
+
 chrome.tabs.onUpdated.addListener(onLoad);
 chrome.tabs.onCreated.addListener(onLoad);
 chrome.tabs.onActivated.addListener(active); //active는 하나밖에 없음
@@ -163,6 +176,7 @@ function gotMessage(message, sender, sendResponse) {
             }
         });
     }
+    save();
     sendResponse({ data: is });
 }
 function buttonClicked(tab) {
@@ -186,6 +200,7 @@ function buttonClicked(tab) {
         chrome.browserAction.setIcon({ path: firstImage });
         chrome.tabs.sendMessage(tab.id, msg); // 현재 탭에만 ON하라고 보냄
     }
+    save();
 }
 
 function onLoad(id) {
@@ -201,6 +216,7 @@ function onLoad(id) {
             data: "OFF"
         };
     }
+    save();
     chrome.tabs.sendMessage(id, msg);
 }
 
@@ -222,6 +238,7 @@ function active(tab) {
         }
     });
     chrome.tabs.sendMessage(tab.tabId, msg);
+    save();
     // if(lastTab){
     //     chrome.tabs.sendMessage(lastTab, msg2);
     // }
@@ -256,6 +273,7 @@ function window(windowId) {
     // if(lastWindow!=windowId){
     //     chrome.tabs.sendMessage(lastTab, msg2);
     // }
+    save();
 }
 
 function highlight(tab) {
@@ -290,7 +308,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57177' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57317' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
