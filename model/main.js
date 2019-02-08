@@ -21,18 +21,21 @@ import {drawKeypoints, drawSkeleton, drawBoundingBox} from './demo_util';
 import Stats from 'stats.js';
 
 // Number of classes to classify
-const NUM_CLASSES = 4;
+const NUM_CLASSES = 7;
 // Webcam Image size. Must be 227. 
 //const IMAGE_SIZE = 227;
-const videoWidth = 600;
-const videoHeight = 500;
+const videoWidth = 640;
+const videoHeight = 480;
 
 // K value for KNN
 const TOPK = 10;
 const stats = new Stats();
 
 let myIncomingClassifier = [];
-let myGroups = []
+let myGroups = [];
+
+let _pose;
+let i=0;
 
 class Main {
   constructor() {
@@ -56,7 +59,7 @@ class Main {
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
     document.body.appendChild(this.canvas);
-
+    this.canvas.style = "border:1px solid #000000"
     this.canvas.width = videoWidth;
     this.canvas.height = videoHeight;
 
@@ -71,9 +74,18 @@ class Main {
       button.innerText = "Pose " + i;
       div.appendChild(button);
 
+      // Create clear button
+      const button2 = document.createElement('button')
+      button2.innerText = "clear " + i;
+      div.appendChild(button2);
+
       // Listen for mouse events when clicking the button
       button.addEventListener('mousedown', () => this.training = i);
       button.addEventListener('mouseup', () => this.training = -1);
+
+      button2.addEventListener('onclick', () => {
+        this.knn.clearClass(i).then(console.log('clear class'));
+      });
 
       // Create info text
       const infoText = document.createElement('span')
@@ -107,12 +119,11 @@ class Main {
   }
 
   async bindPage() {
-    this.net = await posenet.load(1.0);
+    this.net = await posenet.load(1.01);
     this.knn = knnClassifier.create();
     this.mobilenet = await mobilenetModule.load();
 
     //this.myloadModel();
-        
     this.start();
   }
 
@@ -150,7 +161,7 @@ class Main {
       // scores
 
         if (pose.score >= minPoseConfidence) {
-          drawKeypoints(pose.keypoints, minPartConfidence, this.ctx);
+          drawKeypoints(pose.keypoints, 0.5, this.ctx);
           drawSkeleton(pose.keypoints, minPartConfidence, this.ctx);
         }
 
@@ -191,6 +202,8 @@ class Main {
           // Update info text
           if (exampleCount[i] > 0) {
             this.infoTexts[i].innerText = ` ${exampleCount[i]} examples - ${res.confidences[i] * 100}%`
+          } else {
+            this.infoTexts[i].innerText = " No examples added";
           }
         }
       }
@@ -243,11 +256,11 @@ class Main {
 
   async mysaveModel(){
     const myClassifierModel2 = await this.defineClassifierModel(this.knn);
-    myClassifierModel2.save('downloads://classifiermodel');                                                                       
+    myClassifierModel2.save('downloads://model');                                                                       
   }
 
   async myloadModel(){
-    const myLoadedModel  = await tf.loadModel('https://ujoy7851.github.io/Capstone/model/model.json');
+    const myLoadedModel  = await tf.loadModel('https://posekey.github.io/youtube/model/model.json');
     console.log('myLoadedModel.layers.length');
     console.log(myLoadedModel.layers.length);
 
@@ -259,10 +272,10 @@ class Main {
         myIncomingClassifier[myWeightLoop - myDenseStart] =  myLoadedModel.layers[myWeightLoop].getWeights()[0];
         myGroups[myWeightLoop - myDenseStart] =  myLoadedModel.layers[myWeightLoop].name;                        
     }
-    console.log('Printing all the incoming classifiers');
-    for (x=0;  x < myIncomingClassifier.length ; x++){
-      myIncomingClassifier[x].print(true);
-    }
+    // console.log('Printing all the incoming classifiers');
+    // for (x=0;  x < myIncomingClassifier.length ; x++){
+    //   myIncomingClassifier[x].print(true);
+    // }
     console.log('Activating Classifier');
     this.knn.dispose()
     this.knn.setClassifierDataset(myIncomingClassifier);
