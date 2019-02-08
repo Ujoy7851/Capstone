@@ -52,7 +52,7 @@ async function detect(){
     let playAlert = setInterval(async function(){
         if(isDetecting === true&& count==0){
             // const pose = await 
-            let pose = await model.estimateSinglePose(video,0.35,true,16);
+            let pose = await model.estimateSinglePose(video,0.3,true,16);
             // console.log(pose);
             ctx.clearRect(0,0,640,480);
             if (pose.score >= 0.1) {
