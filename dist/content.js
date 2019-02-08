@@ -35000,7 +35000,7 @@ async function loadCanvas() {
 }
 
 async function myloadModel() {
-    const myLoadedModel = await tf.loadModel('https://ujoy7851.github.io/Capstone/model/model.json');
+    const myLoadedModel = await tf.loadModel('https://posekey.github.io/youtube/model/model.json');
     // console.log(myLoadedModel);
     // console.log('myLoadedModel.layers.length');
     // console.log(myLoadedModel.layers.length);
@@ -35077,7 +35077,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '49942' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62765' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
