@@ -78,7 +78,7 @@ async function detect(){
                     switch(res.classIndex){
                         case 0:
                             break;
-                        case 1:
+                        case 3:
                             //scrollBy(0,200);
                             if(ytb_video.paused){
                                 ytb_video.play();
@@ -87,11 +87,11 @@ async function detect(){
                                 ytb_video.pause();
                             }
                             break;
-                        case 2:
+                        case 6:
                             //scrollBy(0,-200);
                             nextButton.click();
                             break;
-                        case 3:
+                        case 1:
                             if (ytb_video.volume > 0.9){
                                 ytb_video.volume = 1;
                             }
@@ -101,7 +101,7 @@ async function detect(){
                             }
                                
                             break;
-                        case 4:
+                        case 2:
                             if(ytb_video.volume < 0.1){
                                 ytb_video.volume = 0.1;
                             }
@@ -110,10 +110,10 @@ async function detect(){
                                 ytb_video.volume -= 0.1;
                             }  
                             break;
-                        case 5:
+                        case 4:
                             ytb_video.currentTime += 5;
                             break;
-                        case 6:
+                        case 5:
                             ytb_video.currentTime -= 5;
                             break;
                             
