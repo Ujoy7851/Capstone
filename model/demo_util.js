@@ -17,8 +17,8 @@
 import * as tf from '@tensorflow/tfjs';
 import * as posenet from '@tensorflow-models/posenet';
 
-const color = 'aqua';
-const lineWidth = 2;
+const color = ['Red', 'orange', 'blue', 'magenta', 'lime'];
+const lineWidth = 3;
 
 function toTuple({y, x}) {
   return [y, x];
@@ -27,7 +27,7 @@ function toTuple({y, x}) {
 export function drawPoint(ctx, y, x, r, color) {
   ctx.beginPath();
   ctx.arc(x, y, r, 0, 2 * Math.PI);
-  ctx.fillStyle = color;
+  ctx.fillStyle = 'black';
   ctx.fill();
 }
 
@@ -47,20 +47,63 @@ export function drawSegment([ay, ax], [by, bx], color, scale, ctx) {
  * Draws a pose skeleton by looking up all adjacent keypoints/joints
  */
 export function drawSkeleton(keypoints, minConfidence, ctx, scale = 1) {
-  const adjacentKeyPoints = posenet.getAdjacentKeyPoints(
-    keypoints, minConfidence);
+  // const adjacentKeyPoints = posenet.getAdjacentKeyPoints(
+  //   keypoints, minConfidence);
 
-  adjacentKeyPoints.forEach((keypoints) => {
-    drawSegment(toTuple(keypoints[0].position),
-      toTuple(keypoints[1].position), color, scale, ctx);
-  });
+  // adjacentKeyPoints.forEach((keypoints) => {
+  //   drawSegment(toTuple(keypoints[0].position),
+  //     toTuple(keypoints[1].position), color, scale, ctx);
+  // });
+  const keypoint5 = keypoints[5];
+  const keypoint6 = keypoints[6];
+  const keypoint7 = keypoints[7];
+  const keypoint8 = keypoints[8];
+  const keypoint9 = keypoints[9];
+  const keypoint10 = keypoints[10];
+  // if (keypoint5.score > minConfidence && keypoint6.score > minConfidence && keypoint7.score > minConfidence && keypoint8.score > minConfidence && keypoint9.score > minConfidence && keypoint10.score > minConfidence) {
+    drawSegment(
+      toTuple(keypoint7.position),
+      toTuple(keypoint9.position),
+      color[0],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint5.position),
+      toTuple(keypoint7.position),
+      color[1],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint5.position),
+      toTuple(keypoint6.position),
+      color[2],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint6.position),
+      toTuple(keypoint8.position),
+      color[3],
+      scale,
+      ctx
+    );
+    drawSegment(
+      toTuple(keypoint8.position),
+      toTuple(keypoint10.position),
+      color[4],
+      scale,
+      ctx
+    );  
+  // }
 }
 
 /**
  * Draw pose keypoints onto a canvas
  */
 export function drawKeypoints(keypoints, minConfidence, ctx, scale = 1) {
-  for (let i = 0; i < keypoints.length; i++) {
+  for (let i = 5; i < 11; i++) {
     const keypoint = keypoints[i];
 
     if (keypoint.score < minConfidence) {
